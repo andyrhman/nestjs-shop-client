@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
 import { setUser } from "@/redux/actions/setUserAction";
+import { setProducts } from "@/redux/actions/setProductsAction";
 import Layout from "./Layout";
 import Navbar from './Navbar';
 import axios from "axios";
@@ -13,8 +14,11 @@ const Wrapper = (props) => {
         (
             async () => {
                 try {
-                    const { data } = await axios.get('user');
-                    props.setUser(data);
+                    const { data: userData } = await axios.get('user');
+                    props.setUser(userData);
+
+                    const { data: productsData } = await axios.get('products');
+                    props.setProducts(productsData);
                 } catch (error) {
                     if (error.response && error.response.status === 401) {
                         setError('An error occured')
@@ -43,13 +47,15 @@ const Wrapper = (props) => {
 const mapStateToProps = (state) => {
     // console.log(state.user); // * Always console log first for showing the response data
     return {
-        user: state.user.user
+        user: state.user.user,
+        products: state.products.products
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        setUser: (user) => dispatch(setUser(user))
+        setUser: (user) => dispatch(setUser(user)),
+        setProducts: (products) => dispatch(setProducts(products))
     }
 }
 

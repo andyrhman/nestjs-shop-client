@@ -1,43 +1,48 @@
 import React from 'react'
-import Image from 'next/image'
+import ProductCardSVG from './Cards/ProductCardSVG';
+import { connect } from "react-redux";
 
-const products = [
-    {
-        id: 1,
-        title: 'Blog Post 1',
-        categories: 'Education',
-        description:
-            'Lorem ipsum dolor sit amet',
-        image: 'https://via.placeholder.com/300'
-    },
-    {
-        id: 2,
-        title: 'Blog Post 2',
-        categories: 'Life Style',
-        description:
-            'Praesent pharetra nisl',
-        image: 'https://via.placeholder.com/300'
-    },
-];
-
-const Card = ({ title, categories, description, uploader, image }) => {
+const Card = ({ products }) => {
     return (
+        <>
+            {products?.map((p) => (
+                <article className="relative" key={p.id}>
+                    <div className="aspect-square overflow-hidden">
+                        <img
+                            className="group-hover:scale-125 h-full w-full object-cover transition-all duration-300"
+                            src={p.image}
+                            alt={p.slug}
+                        />
+                    </div>
+                    {/* Loop this */}
+                    <div className="mt-4 flex items-start justify-between">
+                        <div className="">
+                            <h3 className="text-xs font-semibold sm:text-sm md:text-base">
+                                <a href={`products/${p.slug}`} title="" className="cursor-pointer">
+                                    {p.title}
+                                    <span className="absolute" aria-hidden="true"></span>
+                                </a>
+                            </h3>
+                            <div className="mt-2 flex items-center">
+                                <ProductCardSVG />
+                            </div>
+                        </div>
 
-        <div className="card w-full bg-base-100 shadow-xl md:w-11/12 ">
-            <figure>                
-                <Image src={image} width={300} height={300} priority={true} alt="Blog Post"/>
-            </figure>
-            <div className="card-body">
-                <h2 className="card-title">
-                    {title}
-                </h2>
-                <p>{description}</p>
-                <div className="card-actions justify-end">
-                    <div className="badge badge-outline">Rp 3000</div>
-                </div>
-            </div>
-        </div>
+                        <div className="text-right">
+                            <p className="text-xs font-normal sm:text-sm md:text-base">Rp{new Intl.NumberFormat('id-ID').format(p.price)}</p>
+                        </div>
+                    </div>
+                </article>
+            ))}
+
+        </>
     )
 }
 
-export { Card, products };
+export default connect(
+    (state) => {
+        return {
+            products: state.products.products
+        }
+    }
+)(Card);
