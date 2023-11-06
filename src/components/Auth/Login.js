@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Forgot from '../Modals/Forgot';
 import { useRouter } from 'next/router';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { GoogleLogin } from '@react-oauth/google';
@@ -14,10 +15,12 @@ const AuthLogin = () => {
     const [error, setError] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
     const router = useRouter(); // Initialize the router instance
+    const [loading, setLoading] = useState(false);
 
     const submit = async (e) => {
         e.preventDefault();
         setUsernameOrEmailError(false); // Change this line
+        setLoading(true);
         setPasswordError('');
         setError('');
 
@@ -54,6 +57,8 @@ const AuthLogin = () => {
                     setPasswordError(errorMessage);
                 }
             }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -99,8 +104,14 @@ const AuthLogin = () => {
     const onFacebookError = (e) => {
         console.log(e);
     }
+
+    const forgotPassword = (e) => {
+        e.preventDefault();
+        document.getElementById('forgot_password').showModal();
+    }
     return (
         <>
+            <Forgot />
             <div className="flex flex-col justify-center items-center h-screen">
                 <article className='prose'>
                     <h1>Sign In</h1>
@@ -109,7 +120,6 @@ const AuthLogin = () => {
 
                     </div>
                 </article>
-
                 {error && (
                     <div className="alert alert-error w-96">
                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -126,7 +136,7 @@ const AuthLogin = () => {
                     </div>
                 )}
 
-                <form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96" onSubmit={submit}>
+                <form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96">
                     <div className="mb-4 flex flex-col">
                         <div className='mb-5'>
                             <input
@@ -142,7 +152,7 @@ const AuthLogin = () => {
 
                             {usernameOrEmailError && <div className="text-red-500 text-xs mt-1">{usernameOrEmailError}</div>}
                         </div>
-                        <div className='mb-5'>
+                        <div className='mb-2'>
                             <input
                                 type="password"
                                 placeholder="Password"
@@ -157,7 +167,7 @@ const AuthLogin = () => {
                             {passwordError && <div className="text-red-500 text-xs mt-1">{passwordError}</div>}
                         </div>
                     </div>
-                    <div className="form-control flex flex-row">
+                    <div className="form-control flex flex-row justify-between">
                         <label className="label cursor-pointer gap-4">
                             <input
                                 type="checkbox"
@@ -167,8 +177,11 @@ const AuthLogin = () => {
                             />
                             <span className="label-text">Remember me</span>
                         </label>
+                        <button className='text-blue-500 hover:text-blue-800' onClick={(e) => forgotPassword(e)}>Forgot Password?</button>
                     </div>
-                    <button className="btn btn-block btn-primary mt-4" type='submit'>Login</button>
+                    <button className="btn btn-block btn-primary mt-4" onClick={submit}>
+                        {loading ? <span className="loading loading-bars loading-md"></span> : "Login"}
+                    </button>
 
                     <article className='prose text-center mt-4'>
                         <h4>OR SIGN IN WITH</h4>

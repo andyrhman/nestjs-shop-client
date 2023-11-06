@@ -18,6 +18,7 @@ const AuthRegister = () => {
 
 
     const router = useRouter(); // Initialize the router instance
+    const [loading, setLoading] = useState(false);
 
     const [strength, setStrength] = useState(0);
 
@@ -26,6 +27,7 @@ const AuthRegister = () => {
         setEmailError(false);
         setFullNameError(false);
         setUsernameError(false);
+        setLoading(true);
         setPasswordError('');
         setConfirmPasswordError('');
         setError('');
@@ -70,6 +72,8 @@ const AuthRegister = () => {
                     setUsernameError(errorMessage);
                 }
             }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -254,7 +258,9 @@ const AuthRegister = () => {
                             {confirmPasswordError && <div className="text-red-500 text-xs mt-1">{confirmPasswordError}</div>}
                         </div>
                     </div>
-                    <button className="btn btn-block btn-primary mt-4" type='submit'>Register</button>
+                    <button className="btn btn-block btn-primary mt-4" type='submit'>
+                        {loading ? <span className="loading loading-bars loading-md"></span> : "Submit"}
+                    </button>
                 </form>
             </div>
         </>
