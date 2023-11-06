@@ -6,6 +6,7 @@ import Card from '@/components/Card';
 import Wrapper from '@/components/Wrapper';
 import SEO from '@/components/SEO';
 import StoreHeading from '@/components/StoreHeading';
+import ButtonForPaginate from '@/components/Cards/ButtonForPaginate';
 
 const HomePage = () => {
   const pageTitle = `Home | ${process.env.siteTitle}`
@@ -21,6 +22,7 @@ const HomePage = () => {
             </div>
           </div>
         </section>
+        <ButtonForPaginate/>
         <Footer />
       </Wrapper>
     </Layout>

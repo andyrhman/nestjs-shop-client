@@ -1,6 +1,7 @@
-export const setProducts = (products) => {
+export const setProducts = (products, lastPage) => {
     return {
         type: 'SET_PRODUCTS',
-        products
+        products,
+        lastPage
     }
 }

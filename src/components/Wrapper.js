@@ -9,7 +9,7 @@ import axios from "axios";
 
 const Wrapper = (props) => {
     const [error, setError] = useState('')
-
+    const perPage = 10;
     useEffect(() => {
         (
             async () => {
@@ -17,8 +17,10 @@ const Wrapper = (props) => {
                     const { data: userData } = await axios.get('user');
                     props.setUser(userData);
 
+                    // ? https://www.phind.com/search?cache=g1op1bxyan4knygpnirea0ou
                     const { data: productsData } = await axios.get('products');
-                    props.setProducts(productsData);
+                    const lastPage = Math.ceil(productsData.length / perPage);
+                    props.setProducts(productsData.slice(0, perPage), lastPage);
                 } catch (error) {
                     if (error.response && error.response.status === 401) {
                         setError('An error occured')
@@ -48,14 +50,15 @@ const mapStateToProps = (state) => {
     // console.log(state.user); // * Always console log first for showing the response data
     return {
         user: state.user.user,
-        products: state.products.products
+        products: state.products.products,
+        lastPage: state.products.lastPage
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
         setUser: (user) => dispatch(setUser(user)),
-        setProducts: (products) => dispatch(setProducts(products))
+        setProducts: (products, lastPage) => dispatch(setProducts(products, lastPage))
     }
 }
 
