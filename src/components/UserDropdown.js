@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from "axios";
+import { UserIcon } from '@heroicons/react/24/solid';
 
 const UserDropdown = ({ info }) => {
     const logout = async () => {
@@ -26,14 +27,12 @@ const UserDropdown = ({ info }) => {
                 </div>
             </div>
             <div className="dropdown dropdown-end">
-                <div>{info}</div>
-            </div>
-            <div className="dropdown dropdown-end">
-                <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-                    <div className="w-10 rounded-full">
-                        <img src="https://via.placeholder.com/300" />
+                <button tabIndex={0} className="btn btn-ghost">
+                    <UserIcon strokeWidth={2} className="h-6 w-6" />
+                    <div className="lg:dropdown lg:dropdown-end hidden">
+                        <div>{info}</div>
                     </div>
-                </label>
+                </button>
                 <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
                     <li>
                         <a className="justify-between">
