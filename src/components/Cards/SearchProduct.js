@@ -1,7 +1,6 @@
 import React from 'react';
-import { connect } from 'react-redux';
 
-const Card = ({ products}) => {
+const SearchProduct = ({ products}) => {
     return (
         <>
             {products?.map((p, index) => (
@@ -35,10 +34,4 @@ const Card = ({ products}) => {
 }
 
 
-export default connect(
-    (state) => {
-        return {
-            products: state.products.products
-        }
-    }
-)(Card);
+export default SearchProduct;
