@@ -9,6 +9,7 @@ import SEO from '@/components/SEO'
 import Card from '@/components/Cards/Card';
 import Sidebar from '@/components/Sidebar'
 import ButtonForPaginate from '@/components/Cards/ButtonForPaginate'
+import FilterNotFound from '@/components/Cards/FilterNotFound';
 
 const SearchIndex = () => {
     const pageTitle = `Search Products | ${process.env.siteTitle}`;
@@ -165,11 +166,15 @@ const SearchIndex = () => {
                         />
                     </div>
                     <div className="w-full md:w-3/4 md:mr-8 md:ml-64 md:pl-8">
-                        <Card products={products} />
+                        {products.length > 0 ? (
+                            <Card products={products} />
+                        ) : (
+                            <FilterNotFound />
+                        )}
                         <ButtonForPaginate />
+                        <Footer />
                     </div>
                 </div>
-                <Footer />
             </Wrapper>
         </Layout>
     )
