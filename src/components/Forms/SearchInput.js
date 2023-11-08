@@ -22,7 +22,7 @@ const SearchInput = ({searchTerm, handleSearch, onChangeSearch, products}) => {
                 />
             </div>
             {products.length > 0 && (
-                <div className="absolute w-full left-0 mt-2">
+                <div className="absolute w-full left-0 mt-2 z-10">
                     <ul className="bg-white border rounded-lg overflow-hidden">
                         {products.map((product) => (
                             <li key={product.id} className="p-2 hover:bg-gray-100">

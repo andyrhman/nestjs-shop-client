@@ -18,7 +18,7 @@ const Navbar = ({ user }) => {
             axios.get(`products?search=${searchTerm}`)
                 .then(res => {
                     // Limit the results to 5
-                    const limitedProducts = res.data.slice(0, 5);
+                    const limitedProducts = res.data.slice(0, 3);
                     setProducts(limitedProducts);
                 })
                 .catch(err => {
