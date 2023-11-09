@@ -8,8 +8,8 @@ function BackToProductButton() {
             href="/"
             passHref
             aria-label="back-to-products"
-            className="border border-purple-700 text-purple-700 text-lg font-primary font-semibold pt-2 pb-1 leading-relaxed flex 
-      justify-center items-center focus:ring-1 focus:ring-palette-light focus:outline-none w-full hover:bg-palette-lighter rounded-sm"
+            className="border border-black text-lg font-primary font-semibold pt-2 pb-1 leading-relaxed flex 
+      justify-center items-center focus:ring-1 focus:ring-palette-light focus:outline-none w-full hover:bg-gray-400 rounded-sm"
         >
             <FontAwesomeIcon icon={faArrowLeft} className="w-4 mr-2 inline-flex" />
             Back To All Products

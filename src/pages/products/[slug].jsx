@@ -1,15 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons'
-import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
+import { Slide, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import axios from 'axios';
 import Wrapper from '@/components/Wrapper';
 import Layout from '@/components/Layout';
 import SEO from '@/components/SEO';
 import ProductDetail from '@/components/Cards/ProductDetail';
+import Breadcrumbs from '@/components/Breadcrumb';
 
 const ProductName = () => {
     const [product, setProduct] = useState('');
@@ -31,6 +30,7 @@ const ProductName = () => {
                         setImage(data.image);
                         setMultipleImg(data.product_images);
                         setVariants(data.variant);
+                        setLoading(false);
                     } catch (error) {
                         if (error.response && error.response.status === 401) {
                             console.log(error);
@@ -38,11 +38,33 @@ const ProductName = () => {
                         if (error.response && error.response.status === 403) {
                             console.log(error);
                         }
+                        setLoading(false);
                     }
                 }
             )()
         }
     }, [slug]);
+
+    // * Showing the toast after deletion
+    useEffect(() => {
+        const addedToCart = sessionStorage.getItem('addedToCart');
+        if (addedToCart === '1') {
+            // The page was just reloaded, display the toast:
+            toast.success('Product Added To Cart', {
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                transition: Slide
+            });
+            // Clear the flag from sessionStorage so the toast isn't shown again on subsequent reloads
+            sessionStorage.removeItem('addedToCart');
+        }
+    }, []);
 
     const [variantId, setVariantId] = useState('');
     const [quantity, setQuantity] = useState('');
@@ -51,12 +73,13 @@ const ProductName = () => {
         try {
             await axios.post('cart', {
                 product_title: product.title,
-                quantity,
+                quantity: parseInt(quantity),
                 price: product.price,
                 product_id: product.id,
                 variant_id: variantId
             });
             window.location.reload();
+            sessionStorage.setItem('addedToCart', '1');
         } catch (error) {
             if (error.response && error.response.data && error.response.data.message) {
                 const errorMessage = error.response.data.message;
@@ -68,22 +91,33 @@ const ProductName = () => {
             }
         }
     }
-    const pageTitle = `${slug} | ${process.env.siteTitle}`;
+    const [loading, setLoading] = useState(true);
+    const pageTitle = loading
+        ? `Loading... | ${process.env.siteTitle}`
+        : `${product.title} | ${process.env.siteTitle}`;
+
     return (
         <Layout>
             <SEO title={pageTitle} />
             <Wrapper>
-                <ProductDetail 
-                    image={image}
-                    title={product.title}
-                    price={product.price}
-                    description={product.description}
-                    multipleImg={multipleImg}
-                    setImage={setImage}
-                    submit={submit}
-                    setQuantity={(e) => setQuantity(e.target.value)}
-                    error={error}
-                />
+                <section className="py-12 sm:py-16">
+                    <div className="container mx-auto px-4">
+                        <Breadcrumbs title={loading ? 'Loading...' : product.title} />
+                        <ProductDetail
+                            image={image}
+                            title={product.title}
+                            price={product.price}
+                            description={product.description}
+                            variants={variants}
+                            multipleImg={multipleImg}
+                            setImage={setImage}
+                            setVariantId={(e) => setVariantId(e.target.value)}
+                            submit={submit}
+                            setQuantity={(e) => setQuantity(e.target.value)}
+                            error={error}
+                        />
+                    </div>
+                </section>
             </Wrapper>
         </Layout>
     )

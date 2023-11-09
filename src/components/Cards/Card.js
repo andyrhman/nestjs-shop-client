@@ -19,7 +19,7 @@ const Card = ({ products }) => {
                             <div className="py-4 flex items-start justify-between">
                                 <div className="">
                                     <h3 className="text-xs font-semibold sm:text-sm md:text-base">
-                                        <a href={`products/${p.slug}`} title="" className="cursor-pointer">
+                                        <a href={`/products/${p.slug}`} title="" className="cursor-pointer">
                                             {p.title}
                                             <span className="absolute" aria-hidden="true"></span>
                                         </a>
