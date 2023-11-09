@@ -133,7 +133,6 @@ const ProductDetail = ({
                     <div className="mt-8 flow-root sm:mt-12">
                         <h1 className="text-3xl font-bold">Delivered To Your Door</h1>
                         <p className="mt-4">{description}</p>
-
                     </div>
                 </div>
             </div>
