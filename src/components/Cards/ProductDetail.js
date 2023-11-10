@@ -3,6 +3,8 @@ import React from 'react';
 import SmallError from '../Alert/SmallError';
 import ProductReviewStar from './ProductReviewStar';
 import BackToProductButton from '../Buttons/BackToProductButton';
+import Review from './Review';
+import ReviewForm from '../Forms/ReviewForm';
 
 const ProductDetail = ({
     image,
@@ -12,10 +14,15 @@ const ProductDetail = ({
     setImage,
     multipleImg,
     variants,
+
+    reviews,
+    productId,
+
     setVariantId,
     submit,
     setQuantity,
-    error }) => {
+    error
+}) => {
     return (
         <>
             <div className="lg:col-gap-12 xl:col-gap-16 mt-8 grid grid-cols-1 gap-12 lg:mt-12 lg:grid-cols-5 lg:gap-16">
@@ -82,7 +89,7 @@ const ProductDetail = ({
                             className="w-full rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                             placeholder='Insert your product quantity'
                         />
-                        <SmallError error={error}/>
+                        <SmallError error={error} />
                     </form>
 
                     <div className="mt-4 flex flex-col space-y-4 border-t border-b py-4 sm:flex-col sm:space-y-0">
@@ -119,20 +126,15 @@ const ProductDetail = ({
                 </div>
 
                 <div className="lg:col-span-3">
-                    <div className="border-b border-gray-300">
-                        <nav className="flex gap-4">
-                            <a href="#" title="" className="border-b-2 border-gray-900 py-4 text-sm font-medium text-gray-900 hover:border-gray-400 hover:text-gray-800"> Description </a>
-
-                            <a href="#" title="" className="inline-flex items-center border-b-2 border-transparent py-4 text-sm font-medium text-gray-600">
-                                Reviews
-                                <span className="ml-2 block rounded-full bg-gray-500 px-2 py-px text-xs font-bold text-gray-100"> 1,209 </span>
-                            </a>
-                        </nav>
-                    </div>
-
                     <div className="mt-8 flow-root sm:mt-12">
                         <h1 className="text-3xl font-bold">Delivered To Your Door</h1>
                         <p className="mt-4">{description}</p>
+                    </div>
+                    <div className="mt-8 flow-root sm:mt-12">
+                        <ReviewForm productId={productId}/>
+                        <Review
+                            reviews={reviews}
+                        />
                     </div>
                 </div>
             </div>

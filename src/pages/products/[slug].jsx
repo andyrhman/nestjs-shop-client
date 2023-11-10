@@ -15,6 +15,7 @@ const ProductName = () => {
     const [image, setImage] = useState('');
     const [multipleImg, setMultipleImg] = useState([]);
     const [variants, setVariants] = useState([]);
+    const [reviews, setReviews] = useState([]);
 
     const router = useRouter();
     const { slug } = router.query;
@@ -30,6 +31,8 @@ const ProductName = () => {
                         setImage(data.image);
                         setMultipleImg(data.product_images);
                         setVariants(data.variant);
+                        setReviews(data.review);
+
                         setLoading(false);
                     } catch (error) {
                         if (error.response && error.response.status === 401) {
@@ -110,6 +113,8 @@ const ProductName = () => {
                             description={product.description}
                             variants={variants}
                             multipleImg={multipleImg}
+                            reviews={reviews}
+                            productId={product.id}
                             setImage={setImage}
                             setVariantId={(e) => setVariantId(e.target.value)}
                             submit={submit}
