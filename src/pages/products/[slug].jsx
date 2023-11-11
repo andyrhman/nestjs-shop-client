@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import axios from 'axios';
 import Wrapper from '@/components/Wrapper';
+import Footer from '@/components/Footer';
 import Layout from '@/components/Layout';
 import SEO from '@/components/SEO';
 import ProductDetail from '@/components/Cards/ProductDetail';
@@ -123,6 +124,7 @@ const ProductName = () => {
                         />
                     </div>
                 </section>
+                <Footer/>
             </Wrapper>
         </Layout>
     )

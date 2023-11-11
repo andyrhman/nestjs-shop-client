@@ -1,3 +1,4 @@
+// ? https://www.phind.com/search?cache=z1c4skx8emucp1699ul4lqsi
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 
@@ -11,8 +12,6 @@ const CartLayout = () => {
                 try {
                     const { data } = await axios.get('cart');
                     setUserCart(data);
-                    let total = data.reduce((acc, item) => acc + item.total_price, 0);
-                    setTotalPrice(total);
                 } catch (error) {
                     if (error.response && error.response.status === 500) {
                         console.log(error);
@@ -25,6 +24,47 @@ const CartLayout = () => {
         )()
     }, [])
 
+    useEffect(() => {
+        let total = userCart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+        setTotalPrice(total);
+    }, [userCart]);
+
+    const incrementQuantity = async (id) => {
+        const newCart = userCart.map((item) => {
+            if (item.id === id) {
+                const newQuantity = item.quantity + 1;
+                axios.put(`cart/${id}`, { quantity: newQuantity });
+                return { ...item, quantity: newQuantity };
+            }
+            return item;
+        });
+        setUserCart(newCart);
+    }
+
+    const decrementQuantity = async (id) => {
+        const newCart = userCart.map((item) => {
+            if (item.id === id && item.quantity > 1) {
+                const newQuantity = item.quantity - 1;
+                axios.put(`cart/${id}`, { quantity: newQuantity });
+                return { ...item, quantity: newQuantity };
+            }
+            return item;
+        });
+        setUserCart(newCart);
+    }
+    
+    const deleteProduct = async (id) => {
+        // Send a DELETE request to the server
+        try {
+            await axios.delete(`cart/${id}`);
+            // Filter out the deleted product from the userCart array
+            const newCart = userCart.filter((item) => item.id !== id);
+            // Update the userCart state
+            setUserCart(newCart);
+        } catch (error) {
+            console.log(error);
+        }
+    }    
 
     return (
         <>
@@ -40,7 +80,7 @@ const CartLayout = () => {
                                 <div className="flow-root">
                                     <ul className="-my-8">
                                         {userCart.map((c) => (
-                                            <li className="flex flex-col space-y-3 py-6 text-left sm:flex-row sm:space-x-5 sm:space-y-0">
+                                            <li className="flex flex-col space-y-3 py-6 text-left sm:flex-row sm:space-x-5 sm:space-y-0" key={c.id}>
                                                 <div className="shrink-0">
                                                     <img
                                                         className="h-24 w-24 max-w-full rounded-lg object-cover"
@@ -56,11 +96,12 @@ const CartLayout = () => {
                                                         </div>
 
                                                         <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
-                                                            <p className="shrink-0 w-20 text-base font-semibold text-gray-900 sm:order-2 sm:ml-8 sm:text-right">Rp{new Intl.NumberFormat('id-ID').format(c.total_price)}</p>
+                                                            <p className="shrink-0 w-20 text-base font-semibold text-gray-900 sm:order-2 sm:ml-8 sm:text-right">Rp{new Intl.NumberFormat('id-ID').format(c.price * c.quantity)}</p>
 
                                                             <div className="sm:order-1">
                                                                 <div className="mx-auto flex h-8 items-stretch text-gray-600">
                                                                     <button
+                                                                        onClick={() => decrementQuantity(c.id)}
                                                                         className="flex items-center justify-center rounded-l-md bg-gray-200 px-4 transition hover:bg-black hover:text-white"
                                                                     >
                                                                         -
@@ -71,6 +112,7 @@ const CartLayout = () => {
                                                                         {c.quantity}
                                                                     </div>
                                                                     <button
+                                                                        onClick={() => incrementQuantity(c.id)}
                                                                         className="flex items-center justify-center rounded-r-md bg-gray-200 px-4 transition hover:bg-black hover:text-white"
                                                                     >
                                                                         +
@@ -81,7 +123,7 @@ const CartLayout = () => {
                                                     </div>
 
                                                     <div className="absolute top-0 right-0 flex sm:bottom-0 sm:top-auto">
-                                                        <button type="button" className="flex rounded p-2 text-center text-gray-500 transition-all duration-200 ease-in-out focus:shadow hover:text-gray-900">
+                                                        <button type="button" onClick={() => deleteProduct(c.id)} className="flex rounded p-2 text-center text-gray-500 transition-all duration-200 ease-in-out focus:shadow hover:text-gray-900">
                                                             <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" className=""></path>
                                                             </svg>
