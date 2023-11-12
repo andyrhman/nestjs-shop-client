@@ -29,12 +29,12 @@ const Navbar = ({ user }) => {
         }
     }, [searchTerm]);
 
-
     const handleSearch = (e) => {
         if (e.key === 'Enter') {
             router.push(`/search/${searchTerm}`);
         }
     }
+    
     return (
         <>
             <div className="navbar bg-base-100">
