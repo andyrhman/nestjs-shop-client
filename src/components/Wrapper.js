@@ -16,7 +16,20 @@ const Wrapper = (props) => {
                 try {
                     const { data: userData } = await axios.get('user');
                     props.setUser(userData);
+                } catch (error) {
+                    if (error.response && error.response.status === 401) {
+                        setError('An error occured')
+                    }
 
+                    if (error.response && error.response.status === 403) {
+                        setError('An error occured')
+                    }
+
+                    if (error.response && error.response.status === 404) {
+                        setError('An error occured')
+                    }
+                }
+                try {
                     // ? https://www.phind.com/search?cache=g1op1bxyan4knygpnirea0ou
                     const { data: productsData } = await axios.get('products');
                     const lastPage = Math.ceil(productsData.length / perPage);
@@ -40,7 +53,7 @@ const Wrapper = (props) => {
     }, [])
     return (
         <Layout>
-            <Navbar/>
+            <Navbar />
             {props.children}
         </Layout>
     )

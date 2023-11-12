@@ -6,9 +6,11 @@ import axios from 'axios';
 import ErrorAlert from '../Alert/Error';
 import Link from 'next/link';
 import CartLoop from './CartLoop';
+import CartCompleted from './CartCompleted';
 
 const CartLayout = () => {
     const [userCart, setUserCart] = useState([]);
+    const [selected, setSelected] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
     const [error, setError] = useState('');
     const router = useRouter();
@@ -26,6 +28,9 @@ const CartLayout = () => {
                     if (error.response && error.response.status === 400) {
                         console.log(error);
                     }
+                    if (error.response && error.response.status === 401) {
+                        router.push('/');
+                    }
                 }
             }
         )()
@@ -33,10 +38,10 @@ const CartLayout = () => {
 
     useEffect(() => {
         let total = userCart
-            .filter(item => item.completed === false)
+            .filter(item => item.completed === false && selected.includes(item.id))
             .reduce((acc, item) => acc + (item.price * item.quantity), 0);
         setTotalPrice(total);
-    }, [userCart]);
+    }, [userCart, selected]);
 
     const incrementQuantity = async (id) => {
         const newCart = userCart.map((item) => {
@@ -76,15 +81,17 @@ const CartLayout = () => {
     }
 
     // * Select Product Cart
-    const [selected, setSelected] = useState([]);
 
     const select = (id) => {
-        if (selected.some((s) => s === id)) {
-            setSelected(selected.filter((s) => s !== id));
-            return;
-        }
-
-        setSelected([...selected, id]);
+        setSelected(prevSelected => {
+            if (prevSelected.includes(id)) {
+                // If the id is already selected, remove it from the array
+                return prevSelected.filter(itemId => itemId !== id);
+            } else {
+                // If the id is not selected, add it to the array
+                return [...prevSelected, id];
+            }
+        });
         console.log([...selected, id])
     }
 
@@ -132,7 +139,7 @@ const CartLayout = () => {
 
     return (
         <>
-            <section className="h-screen bg-gray-100 py-12 sm:py-16 lg:py-20">
+            <section className=" bg-gray-100 py-4 sm:py-8 lg:py-8">
                 <div className="mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-center">
                         <h1 className="text-2xl font-semibold text-gray-900">Your Cart</h1>
@@ -182,7 +189,7 @@ const CartLayout = () => {
                     </div>
                 </div>
             </section>
-
+            <CartCompleted userCart={userCart} />
         </>
     )
 }
