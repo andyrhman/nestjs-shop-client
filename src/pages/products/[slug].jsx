@@ -17,6 +17,7 @@ const ProductName = () => {
     const [multipleImg, setMultipleImg] = useState([]);
     const [variants, setVariants] = useState([]);
     const [reviews, setReviews] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const router = useRouter();
     const { slug } = router.query;
@@ -74,6 +75,7 @@ const ProductName = () => {
     const [quantity, setQuantity] = useState('');
     const submit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         try {
             await axios.post('cart', {
                 product_title: product.title,
@@ -93,9 +95,10 @@ const ProductName = () => {
                 setError('Please login to order the product');
                 router.push('/login');
             }
+        } finally {
+            setLoading(false);
         }
     }
-    const [loading, setLoading] = useState(true);
     const pageTitle = loading
         ? `Loading... | ${process.env.siteTitle}`
         : `${product.title} | ${process.env.siteTitle}`;
@@ -120,6 +123,7 @@ const ProductName = () => {
                             setVariantId={(e) => setVariantId(e.target.value)}
                             submit={submit}
                             setQuantity={(e) => setQuantity(e.target.value)}
+                            loading={loading}
                             error={error}
                         />
                     </div>

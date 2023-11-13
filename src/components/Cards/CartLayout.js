@@ -13,6 +13,7 @@ const CartLayout = () => {
     const [selected, setSelected] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -96,6 +97,7 @@ const CartLayout = () => {
     }
 
     const checkout = async () => {
+        setLoading(true);
         try {
             const { data } = await axios.post('checkout/orders', {
                 carts: selected.map(id => ({ cart_id: id }))
@@ -106,6 +108,8 @@ const CartLayout = () => {
                 const errorMessage = error.response.data.message;
                 setError(errorMessage);
             }
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -119,10 +123,19 @@ const CartLayout = () => {
                 className="group inline-flex w-full items-center justify-center rounded-md bg-gray-900 px-6 py-4 text-lg font-semibold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800"
                 onClick={checkout}
             >
-                Checkout
-                <svg xmlns="http://www.w3.org/2000/svg" className="group-hover:ml-8 ml-4 h-6 w-6 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
+                {loading
+                    ? (
+                        <span className="loading loading-bars loading-md"></span>
+                    ) : (
+                        <>
+                            Checkout
+                            <svg xmlns="http://www.w3.org/2000/svg" className="group-hover:ml-8 ml-4 h-6 w-6 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                            </svg>
+                        </>
+                    )
+                }
+
             </button>
         )
     } else {
@@ -150,7 +163,7 @@ const CartLayout = () => {
                             ?
                             <div className='flex flex-col justify-center items-center'>
                                 <ErrorAlert error={error} />
-                                <Link href={'/address'} className='btn btn-sm btn-info mt-4'>
+                                <Link href={'/address'} target='_blank' className='btn btn-sm btn-info mt-4'>
                                     <PlusIcon strokeWidth={4} className='h-4 w-4' />
                                     Create Your Address
                                 </Link>

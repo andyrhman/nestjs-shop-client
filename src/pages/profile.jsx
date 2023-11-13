@@ -10,9 +10,8 @@ import axios from 'axios'
 
 import 'react-toastify/dist/ReactToastify.css';
 import { Slide, toast } from 'react-toastify';
-import { connect } from "react-redux";
 
-const Profile = ({ user }) => {
+const Profile = () => {
     const [name, setName] = useState('')
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
@@ -27,29 +26,26 @@ const Profile = ({ user }) => {
     const [strength, setStrength] = useState(0);
     const router = useRouter();
     useEffect(() => {
-        if (user) {
-            (
-                async () => {
-                    try {
-                        setName(user.fullName)
-                        setUsername(user.username)
-                        setEmail(user.email)
-                    } catch (error) {
-                        if (error.response && error.response.status === 401) {
-                            setError('An error occurred');
-                            router.push('/login');
-                        }
-                        if (error.response && error.response.status === 403) {
-                            setError('An error occurred');
-                            router.push('/login');
-                        }
+        (
+            async () => {
+                try {
+                    const { data } = await axios.get('user');
+                    setName(data.fullName);
+                    setUsername(data.username);
+                    setEmail(data.email);
+                } catch (error) {
+                    if (error.response && error.response.status === 401) {
+                        setError('An error occurred');
+                        router.push('/login');
+                    }
+                    if (error.response && error.response.status === 403) {
+                        setError('An error occurred');
+                        router.push('/login');
                     }
                 }
-            )()
-        } else {
-            router.push('/');
-        }
-    }, [user])
+            }
+        )()
+    }, [])
 
     const submitInfo = async (e) => {
         e.preventDefault()
@@ -184,45 +180,43 @@ const Profile = ({ user }) => {
         <Layout>
             <SEO title={pageTitle} />
             <Wrapper>
-                <div className="flex flex-wrap">
-                    {/* //* https://www.phind.com/search?cache=y2fp7qrbgub0g51l1tg04mr6 */}
-                    <div className="order-2 lg:order-1 w-full lg:w-8/12 px-4">
-                        <ProfileSettings
-                            name={name}
-                            username={username}
-                            email={email}
-                            setName={(e) => setName(e.target.value)}
-                            setUsername={(e) => setUsername(e.target.value)}
-                            setEmail={(e) => setEmail(e.target.value)}
-                            setPassword={(e) => validatePassword(e.target.value)}
-                            setConfirmPassword={(e) => validateConfirmPassword(e.target.value)}
-                            error={error}
-                            nameError={nameError}
-                            usernameError={usernameError}
-                            emailError={emailError}
-                            passwordError={passwordError}
-                            confirmPasswordError={confirmPasswordError}
-                            submitInfo={submitInfo}
-                            submitPassword={submitPassword}
-                            strength={strength}
-                            strengthText={strengthText()}
-                            strengthBarColor={strengthBarColor()}
-                        />
+                {username ? (
+                    <div className="flex flex-wrap">
+                        {/* //* https://www.phind.com/search?cache=y2fp7qrbgub0g51l1tg04mr6 */}
+                        <div className="order-2 lg:order-1 w-full lg:w-8/12 px-4">
+                            <ProfileSettings
+                                name={name}
+                                username={username}
+                                email={email}
+                                setName={(e) => setName(e.target.value)}
+                                setUsername={(e) => setUsername(e.target.value)}
+                                setEmail={(e) => setEmail(e.target.value)}
+                                setPassword={(e) => validatePassword(e.target.value)}
+                                setConfirmPassword={(e) => validateConfirmPassword(e.target.value)}
+                                error={error}
+                                nameError={nameError}
+                                usernameError={usernameError}
+                                emailError={emailError}
+                                passwordError={passwordError}
+                                confirmPasswordError={confirmPasswordError}
+                                submitInfo={submitInfo}
+                                submitPassword={submitPassword}
+                                strength={strength}
+                                strengthText={strengthText()}
+                                strengthBarColor={strengthBarColor()}
+                            />
+                        </div>
+                        <div className="order-1 lg:order-2 w-full lg:w-4/12 px-4 lg:fixed right-0">
+                            <UserInfo />
+                        </div>
                     </div>
-                    <div className="order-1 lg:order-2 w-full lg:w-4/12 px-4 lg:fixed right-0">
-                        <UserInfo />
-                    </div>
-                </div>
+                ) : (
+                    null
+                )}
                 <Footer />
             </Wrapper>
         </Layout>
     )
 }
 
-export default connect(
-    (state) => {
-        return {
-            user: state.user.user
-        }
-    }
-)(Profile);
+export default Profile;
