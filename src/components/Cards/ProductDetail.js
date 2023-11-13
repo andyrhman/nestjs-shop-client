@@ -7,6 +7,7 @@ import Review from './Review';
 import ReviewForm from '../Forms/ReviewForm';
 
 const ProductDetail = ({
+    product,
     image,
     title,
     price,
@@ -59,7 +60,7 @@ const ProductDetail = ({
                 <div className="lg:col-span-2 lg:row-span-2 lg:row-end-2">
                     <BackToProductButton />
                     <h1 className="sm: text-2xl font-bold text-gray-900 sm:text-3xl">{title}</h1>
-                    <ProductReviewStar />
+                    <ProductReviewStar averageRating={product}/>
                     <form>
                         <h2 className="mt-8 text-base text-gray-900">Choose Variant</h2>
                         <div className="mt-3 flex select-none flex-wrap items-center gap-1">

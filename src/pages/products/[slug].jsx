@@ -111,6 +111,7 @@ const ProductName = () => {
                     <div className="container mx-auto px-4">
                         <Breadcrumbs title={loading ? 'Loading...' : product.title} />
                         <ProductDetail
+                            product={product}
                             image={image}
                             title={product.title}
                             price={product.price}

@@ -1,5 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import dynamic from 'next/dynamic';
+
+const StarRatings = dynamic(() => import('react-star-ratings'), { ssr: false });
 
 const Card = ({ products }) => {
     return (
@@ -24,6 +27,17 @@ const Card = ({ products }) => {
                                             <span className="absolute" aria-hidden="true"></span>
                                         </a>
                                     </h3>
+                                    <div className="mt-2 flex items-center">
+                                        <StarRatings
+                                            rating={p.averageRating}
+                                            starDimension="18px"
+                                            starSpacing="2px"
+                                            starRatedColor="gold"
+                                            starEmptyColor="gray"
+                                            numberOfStars={5}
+                                            name='rating'
+                                        />
+                                    </div>
                                 </div>
                                 <div className="text-right">
                                     <p className="text-xs font-normal sm:text-sm md:text-base">Rp{new Intl.NumberFormat('id-ID').format(p.price)}</p>
