@@ -58,7 +58,7 @@ const ReviewForm = ({ productId }) => {
                         <div className='mb-5'>
                             <textarea
                                 className="textarea textarea-bordered w-full"
-                                placeholder="Bio"
+                                placeholder="Write your review"
                                 onChange={(e) => setComment(e.target.value)}
                             >
                             </textarea>
