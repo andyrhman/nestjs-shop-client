@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import '@/styles/globals.css'; // Your global CSS file
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
-axios.defaults.baseURL = process.env.SERVER_ENDPOINT;
+axios.defaults.baseURL = "http://shopyfy-server-env.eba-rzdi3hpy.ap-southeast-1.elasticbeanstalk.com/api/";
 axios.defaults.withCredentials = true;
 
 const store = configStore();
