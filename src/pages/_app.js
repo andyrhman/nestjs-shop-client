@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import '@/styles/globals.css'; // Your global CSS file
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
-axios.defaults.baseURL = 'http://localhost:8000/api/';
+axios.defaults.baseURL = process.env.SERVER_ENDPOINT;
 axios.defaults.withCredentials = true;
 
 const store = configStore();
