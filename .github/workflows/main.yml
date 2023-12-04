@@ -16,7 +16,7 @@ jobs:
 
       - name: Build Docker images and push to Docker Hub
         run: |
-          docker build --build-arg NEXT_PUBLIC_SERVER_ENDPOINT_1=${{ secrets.NEXT_PUBLIC_SERVER_ENDPOINT_1 }} -t tataran/shop-client .
+          docker build -t tataran/shop-client .
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
           docker push tataran/shop-client
         env:
