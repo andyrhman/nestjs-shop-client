@@ -9,7 +9,7 @@ import SearchProduct from '@/components/Cards/SearchProduct'
 import Sidebar from '@/components/Sidebar';
 import NotFound from '@/components/Cards/NotFound'
 import Pagination from '@/components/PaginationForSearch'
-import Cookies from 'js-cookie';
+import http from '../../../services/Api';
 
 const Search = ({ products, searchTerm }) => {
     const [currentPage, setCurrentPage] = useState(0);
@@ -208,7 +208,7 @@ export const getServerSideProps = async (context) => {
         query += `&sortByDate=${sortByDate}`;
     }
 
-    const { data: products } = await axios.get(query);
+    const { data: products } = await http.get(query);
     return {
         props: {
             products,
